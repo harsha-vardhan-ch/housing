@@ -10,6 +10,14 @@ import {
   ErrorComponent,
 } from "@pankod/refine-mui";
 
+import {
+  AccountCircleOutlined,
+  ChatBubbleOutline,
+  PeopleAltOutlined,
+  StarOutlineRounded,
+  VillaOutlined
+ }from '@mui/icons-material';
+
 import dataProvider from "@pankod/refine-simple-rest";
 import { MuiInferencer } from "@pankod/refine-inferencer/mui";
 import routerProvider from "@pankod/refine-react-router-v6";
@@ -107,13 +115,35 @@ function App() {
           catchAll={<ErrorComponent />}
           resources={[
             {
-              name: "posts",
+              name: "Properties",
               list: MuiInferencer,
-              edit: MuiInferencer,
-              show: MuiInferencer,
-              create: MuiInferencer,
-              canDelete: true,
+              icon: <VillaOutlined/>
             },
+            {
+              name: "Agent",
+              list: MuiInferencer,
+              icon: <PeopleAltOutlined />
+            },
+            {
+              name: "Review",
+              list: MuiInferencer,
+              icon: <StarOutlineRounded/>
+            },
+            {
+              name: "Message",
+              list: MuiInferencer,
+              icon: <ChatBubbleOutline/>
+            },
+            {
+              name: "My Profile",
+              list: MuiInferencer,
+              icon: <AccountCircleOutlined/>,
+              options: {
+                label: 'My Profile'
+              }
+        
+            }
+
           ]}
           Title={Title}
           Sider={Sider}
