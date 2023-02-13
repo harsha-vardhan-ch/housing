@@ -39,13 +39,13 @@ export const Header: React.FC = () => {
           justifyContent="flex-end"
           alignItems="center"
         >
-          <IconButton
+          {/* <IconButton
             onClick={() => {
               setMode();
             }}
           >
             {mode === "dark" ? <DarkModeOutlined /> : <LightModeOutlined />}
-          </IconButton>
+          </IconButton> */}
           <FormControl sx={{ m: 1, minWidth: 120 }}>
             <Select
               disableUnderline

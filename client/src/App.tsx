@@ -25,9 +25,19 @@ import axios, { AxiosRequestConfig } from "axios";
 import { useTranslation } from "react-i18next";
 import { ColorModeContextProvider } from "contexts";
 import { Title, Sider, Layout, Header } from "components/layout";
-import { Login } from "pages/login";
 import { CredentialResponse } from "interfaces/google";
 import { parseJwt } from "utils/parse-jwt";
+import { 
+  Login,
+  Home,
+  Agents,
+  AgentProfile,
+  MyProfile,
+  AllProperties,
+  PropertyDetails,
+  CreateProperty,
+  EditProperty
+} from "pages/pagesIndex";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((request: AxiosRequestConfig) => {
