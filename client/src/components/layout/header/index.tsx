@@ -31,7 +31,7 @@ export const Header: React.FC = () => {
   const showUserInfo = user && (user.name || user.avatar);
 
   return (
-    <AppBar color="default" position="sticky" elevation={1}>
+    <AppBar color="default" position="sticky" elevation={0} sx={{background: '#FCFCFC'}}>
       <Toolbar>
         <Stack
           direction="row"
@@ -44,7 +44,7 @@ export const Header: React.FC = () => {
               setMode();
             }}
           >
-            {mode === "dark" ? <LightModeOutlined /> : <DarkModeOutlined />}
+            {mode === "dark" ? <DarkModeOutlined /> : <LightModeOutlined />}
           </IconButton>
           <FormControl sx={{ m: 1, minWidth: 120 }}>
             <Select
