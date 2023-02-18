@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createElement } from "react";
 
 import { Refine, AuthProvider } from "@pankod/refine-core";
 import {
@@ -126,27 +126,31 @@ function App() {
           resources={[
             {
               name: "Properties",
-              list: MuiInferencer,
+              list: AllProperties,
+              show: PropertyDetails,
+              create: CreateProperty,
+              edit: EditProperty,
               icon: <VillaOutlined/>
             },
             {
               name: "Agent",
-              list: MuiInferencer,
+              list: Agents,
+              show: AgentProfile,
               icon: <PeopleAltOutlined />
             },
             {
               name: "Review",
-              list: MuiInferencer,
+              list: Home,
               icon: <StarOutlineRounded/>
             },
             {
               name: "Message",
-              list: MuiInferencer,
+              list: Home,
               icon: <ChatBubbleOutline/>
             },
             {
               name: "My Profile",
-              list: MuiInferencer,
+              list: MyProfile,
               icon: <AccountCircleOutlined/>,
               options: {
                 label: 'My Profile'
