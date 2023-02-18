@@ -133,18 +133,18 @@ function App() {
               icon: <VillaOutlined/>
             },
             {
-              name: "Agent",
+              name: "Agents",
               list: Agents,
               show: AgentProfile,
               icon: <PeopleAltOutlined />
             },
             {
-              name: "Review",
+              name: "Reviews",
               list: Home,
               icon: <StarOutlineRounded/>
             },
             {
-              name: "Message",
+              name: "Messages",
               list: Home,
               icon: <ChatBubbleOutline/>
             },
