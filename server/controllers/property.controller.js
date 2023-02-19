@@ -13,13 +13,12 @@ cloudinary.config({
 });
 
 export const getAllProperties = async (req, res) => {
-	// try {
-	// 	const postMessages = await PostMessage.find();
-	// 	res.status(200).json(postMessages);
-	// } catch (err) {
-	// 	res.status(404).json(err.message);
-	// }
-	// res.send("Working through controller bro");
+	try {
+		const properties = await PropertyModel.find({}).limit(req.query._end);
+		res.status(200).json(properties);
+	} catch (err) {
+		res.status(404).json(err.message);
+	}
 };
 
 export const getProperty = async (req, res) => {
