@@ -2,21 +2,21 @@ import React, { createElement } from "react";
 
 import { Refine, AuthProvider } from "@pankod/refine-core";
 import {
-  notificationProvider,
-  RefineSnackbarProvider,
-  CssBaseline,
-  GlobalStyles,
-  ReadyPage,
-  ErrorComponent,
+	notificationProvider,
+	RefineSnackbarProvider,
+	CssBaseline,
+	GlobalStyles,
+	ReadyPage,
+	ErrorComponent,
 } from "@pankod/refine-mui";
 
 import {
-  AccountCircleOutlined,
-  ChatBubbleOutline,
-  PeopleAltOutlined,
-  StarOutlineRounded,
-  VillaOutlined
- }from '@mui/icons-material';
+	AccountCircleOutlined,
+	ChatBubbleOutline,
+	PeopleAltOutlined,
+	StarOutlineRounded,
+	VillaOutlined,
+} from "@mui/icons-material";
 
 import dataProvider from "@pankod/refine-simple-rest";
 import { MuiInferencer } from "@pankod/refine-inferencer/mui";
@@ -27,150 +27,170 @@ import { ColorModeContextProvider } from "contexts";
 import { Title, Sider, Layout, Header } from "components/layout";
 import { CredentialResponse } from "interfaces/google";
 import { parseJwt } from "utils/parse-jwt";
-import { 
-  Login,
-  Home,
-  Agents,
-  AgentProfile,
-  MyProfile,
-  AllProperties,
-  PropertyDetails,
-  CreateProperty,
-  EditProperty
+import {
+	Login,
+	Home,
+	Agents,
+	AgentProfile,
+	MyProfile,
+	AllProperties,
+	PropertyDetails,
+	CreateProperty,
+	EditProperty,
 } from "pages/pagesIndex";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((request: AxiosRequestConfig) => {
-  const token = localStorage.getItem("token");
-  if (request.headers) {
-    request.headers["Authorization"] = `Bearer ${token}`;
-  } else {
-    request.headers = {
-      Authorization: `Bearer ${token}`,
-    };
-  }
+	const token = localStorage.getItem("token");
+	if (request.headers) {
+		request.headers["Authorization"] = `Bearer ${token}`;
+	} else {
+		request.headers = {
+			Authorization: `Bearer ${token}`,
+		};
+	}
 
-  return request;
+	return request;
 });
 
 function App() {
-  const { t, i18n } = useTranslation();
+	const { t, i18n } = useTranslation();
 
-  const authProvider: AuthProvider = {
-    login: ({ credential }: CredentialResponse) => {
-      const profileObj = credential ? parseJwt(credential) : null;
+	const authProvider: AuthProvider = {
+		login: async ({ credential }: CredentialResponse) => {
+			const profileObj = credential ? parseJwt(credential) : null;
 
-      if (profileObj) {
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            ...profileObj,
-            avatar: profileObj.picture,
-          })
-        );
-      }
+			// Save user to MongoDB
+			if (profileObj) {
+				const response = await fetch(
+					"http://localhost:8080/api/v1/users",
+					{
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							name: profileObj.name,
+							email: profileObj.email,
+							avatar: profileObj.picture,
+						}),
+					}
+				);
+				const data = await response.json();
+				if (response.status === 200) {
+					localStorage.setItem(
+						"user",
+						JSON.stringify({
+							...profileObj,
+							avatar: profileObj.picture,
+							userid: data._id,
+						})
+					);
+				} else {
+					console.log("Response code not 200");
+					return Promise.reject();
+				}
+			}
 
-      localStorage.setItem("token", `${credential}`);
+			localStorage.setItem("token", `${credential}`);
 
-      return Promise.resolve();
-    },
-    logout: () => {
-      const token = localStorage.getItem("token");
+			return Promise.resolve();
+		},
+		logout: () => {
+			const token = localStorage.getItem("token");
 
-      if (token && typeof window !== "undefined") {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        axios.defaults.headers.common = {};
-        window.google?.accounts.id.revoke(token, () => {
-          return Promise.resolve();
-        });
-      }
+			if (token && typeof window !== "undefined") {
+				localStorage.removeItem("token");
+				localStorage.removeItem("user");
+				axios.defaults.headers.common = {};
+				window.google?.accounts.id.revoke(token, () => {
+					return Promise.resolve();
+				});
+			}
 
-      return Promise.resolve();
-    },
-    checkError: () => Promise.resolve(),
-    checkAuth: async () => {
-      const token = localStorage.getItem("token");
+			return Promise.resolve();
+		},
+		checkError: () => Promise.resolve(),
+		checkAuth: async () => {
+			const token = localStorage.getItem("token");
 
-      if (token) {
-        return Promise.resolve();
-      }
-      return Promise.reject();
-    },
+			if (token) {
+				return Promise.resolve();
+			}
+			return Promise.reject();
+		},
 
-    getPermissions: () => Promise.resolve(),
-    getUserIdentity: async () => {
-      const user = localStorage.getItem("user");
-      if (user) {
-        return Promise.resolve(JSON.parse(user));
-      }
-    },
-  };
+		getPermissions: () => Promise.resolve(),
+		getUserIdentity: async () => {
+			const user = localStorage.getItem("user");
+			if (user) {
+				return Promise.resolve(JSON.parse(user));
+			}
+		},
+	};
 
-  const i18nProvider = {
-    translate: (key: string, params: object) => t(key, params),
-    changeLocale: (lang: string) => i18n.changeLanguage(lang),
-    getLocale: () => i18n.language,
-  };
+	const i18nProvider = {
+		translate: (key: string, params: object) => t(key, params),
+		changeLocale: (lang: string) => i18n.changeLanguage(lang),
+		getLocale: () => i18n.language,
+	};
 
-  return (
-    <ColorModeContextProvider>
-      <CssBaseline />
-      <GlobalStyles styles={{ html: { WebkitFontSmoothing: "auto" } }} />
-      <RefineSnackbarProvider>
-        <Refine
-          dataProvider={dataProvider("https://api.fake-rest.refine.dev")}
-          notificationProvider={notificationProvider}
-          ReadyPage={ReadyPage}
-          catchAll={<ErrorComponent />}
-          resources={[
-            {
-              name: "Properties",
-              list: AllProperties,
-              show: PropertyDetails,
-              create: CreateProperty,
-              edit: EditProperty,
-              icon: <VillaOutlined/>
-            },
-            {
-              name: "Agents",
-              list: Agents,
-              show: AgentProfile,
-              icon: <PeopleAltOutlined />
-            },
-            {
-              name: "Reviews",
-              list: Home,
-              icon: <StarOutlineRounded/>
-            },
-            {
-              name: "Messages",
-              list: Home,
-              icon: <ChatBubbleOutline/>
-            },
-            {
-              name: "My Profile",
-              list: MyProfile,
-              icon: <AccountCircleOutlined/>,
-              options: {
-                label: 'My Profile'
-              }
-        
-            }
-
-          ]}
-          Title={Title}
-          Sider={Sider}
-          Layout={Layout}
-          Header={Header}
-          routerProvider={routerProvider}
-          authProvider={authProvider}
-          LoginPage={Login}
-          i18nProvider={i18nProvider}
-        />
-      </RefineSnackbarProvider>
-    </ColorModeContextProvider>
-  );
+	return (
+		<ColorModeContextProvider>
+			<CssBaseline />
+			<GlobalStyles styles={{ html: { WebkitFontSmoothing: "auto" } }} />
+			<RefineSnackbarProvider>
+				<Refine
+					dataProvider={dataProvider(
+						"https://api.fake-rest.refine.dev"
+					)}
+					notificationProvider={notificationProvider}
+					ReadyPage={ReadyPage}
+					catchAll={<ErrorComponent />}
+					resources={[
+						{
+							name: "Properties",
+							list: AllProperties,
+							show: PropertyDetails,
+							create: CreateProperty,
+							edit: EditProperty,
+							icon: <VillaOutlined />,
+						},
+						{
+							name: "Agents",
+							list: Agents,
+							show: AgentProfile,
+							icon: <PeopleAltOutlined />,
+						},
+						{
+							name: "Reviews",
+							list: Home,
+							icon: <StarOutlineRounded />,
+						},
+						{
+							name: "Messages",
+							list: Home,
+							icon: <ChatBubbleOutline />,
+						},
+						{
+							name: "My Profile",
+							list: MyProfile,
+							icon: <AccountCircleOutlined />,
+							options: {
+								label: "My Profile",
+							},
+						},
+					]}
+					Title={Title}
+					Sider={Sider}
+					Layout={Layout}
+					Header={Header}
+					routerProvider={routerProvider}
+					authProvider={authProvider}
+					LoginPage={Login}
+					i18nProvider={i18nProvider}
+				/>
+			</RefineSnackbarProvider>
+		</ColorModeContextProvider>
+	);
 }
 
 export default App;
