@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.js": "/static/js/main.7bceb854.js",
+    "static/js/787.44e022fc.chunk.js": "/static/js/787.44e022fc.chunk.js",
+    "static/media/yariga.svg": "/static/media/yariga.35a97b1ad50b04999dd2a5b693b06a53.svg",
+    "static/media/logo.svg": "/static/media/logo.0b6459d7a36d0cf375e7c60764d42005.svg",
+    "index.html": "/index.html",
+    "main.7bceb854.js.map": "/static/js/main.7bceb854.js.map",
+    "787.44e022fc.chunk.js.map": "/static/js/787.44e022fc.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.7bceb854.js"
+  ]
+}

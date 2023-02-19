@@ -13,7 +13,7 @@ cloudinary.config({
 });
 
 export const getAllProperties = async (req, res) => {
-	console.log("In Controller");
+	// console.log("In Controller");
 	// For pagination, sorting
 	const {
 		_end,
@@ -28,7 +28,7 @@ export const getAllProperties = async (req, res) => {
 		query.propertyType = propertyType;
 	}
 	if (title_like) {
-		query.title = { $regex: title_like, $options: 'i' };
+		query.title = { $regex: title_like, $options: "i" };
 	}
 
 	// Display posts
@@ -39,26 +39,27 @@ export const getAllProperties = async (req, res) => {
 			.limit(_end)
 			.skip(_start)
 			.sort({ [_sort]: _order });
-		
-		console.log(count,properties);
+
+		// console.log(count, properties);
 		res.header("x-total-count", count);
 		res.header("Access-Control-Expose-Headers", "x-total-count");
 		res.status(200).json(properties);
 	} catch (err) {
-		console.log(err,err.message);
+		// console.log(err, err.message);
 		res.status(404).json(err.message);
 	}
 };
 
 export const getProperty = async (req, res) => {
-	// const id = req.params;
-	// try {
-	// 	const post = await PostMessage.findById(id);
-	// 	res.status(200).json(post);
-	// } catch (err) {
-	// 	res.status(404).json(err.message);
-	// }
-	// // res.send("Working through controller bro");
+	try {
+		const { id } = req.params;
+		const propertyExists = await PropertyModel.findOne({ _id: id }).populate('creator');
+	
+		if (propertyExists) res.status(200).json(propertyExists);
+		else res.status(404).json({ message: 'Property does not exist' });
+	  } catch (err) {
+		res.status(500).json({ message: 'Failed to get the property details, please try again later' });
+	  }
 };
 
 export const createProperty = async (req, res) => {

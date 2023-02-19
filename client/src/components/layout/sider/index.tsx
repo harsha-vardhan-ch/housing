@@ -35,10 +35,12 @@ import {
 } from "@pankod/refine-core";
 
 import { Title as DefaultTitle } from "../title";
+import { useLocation } from '@pankod/refine-react-router-v6';
 
 export const Sider: typeof DefaultSider = ({ render }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [opened, setOpened] = useState(false);
+  const { pathname } = useLocation();
 
   const drawerWidth = () => {
     if (collapsed) return 64;
@@ -235,9 +237,9 @@ export const Sider: typeof DefaultSider = ({ render }) => {
             py: 1,
             "&.Mui-selected": {
               "&:hover": {
-                backgroundColor: "transparent",
+                backgroundColor: pathname === '/' ? '#1e36e8' : 'transparent',
               },
-              backgroundColor: "transparent",
+              backgroundColor: pathname === '/' ? '#475be8' : 'transparent',
             },
             justifyContent: "center",
           }}
@@ -246,7 +248,7 @@ export const Sider: typeof DefaultSider = ({ render }) => {
             sx={{
               justifyContent: "center",
               minWidth: 36,
-              color: "#808191",
+              color: pathname === '/' ? '#fff' : '#808191',
               marginLeft: '6px',
               marginRight: '14px'
 
@@ -259,7 +261,9 @@ export const Sider: typeof DefaultSider = ({ render }) => {
             primaryTypographyProps={{
               noWrap: true,
               fontSize: "16px",
-              fontWeight: selectedKey === "/" ? "bold" : "normal",
+              fontWeight: pathname === '/' ? 'bold' : 'normal',
+              color: pathname === '/' ? '#fff' : '#808191',
+              marginLeft: '10px',
             }}
           />
         </ListItemButton>
