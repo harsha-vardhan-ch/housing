@@ -13,10 +13,39 @@ cloudinary.config({
 });
 
 export const getAllProperties = async (req, res) => {
+	console.log("In Controller");
+	// For pagination, sorting
+	const {
+		_end,
+		_order,
+		_start,
+		_sort,
+		title_like = "",
+		propertyType = "",
+	} = req.query;
+	const query = {};
+	if (propertyType !== "") {
+		query.propertyType = propertyType;
+	}
+	if (title_like) {
+		query.title = { $regex: title_like, $options: 'i' };
+	}
+
+	// Display posts
 	try {
-		const properties = await PropertyModel.find({}).limit(req.query._end);
+		const count = await PropertyModel.countDocuments({ query });
+
+		const properties = await PropertyModel.find(query)
+			.limit(_end)
+			.skip(_start)
+			.sort({ [_sort]: _order });
+		
+		console.log(count,properties);
+		res.header("x-total-count", count);
+		res.header("Access-Control-Expose-Headers", "x-total-count");
 		res.status(200).json(properties);
 	} catch (err) {
+		console.log(err,err.message);
 		res.status(404).json(err.message);
 	}
 };
@@ -76,10 +105,8 @@ export const createProperty = async (req, res) => {
 export const updateProperty = async (req, res) => {
 	// const { id } = req.params;
 	// const { title, message, creator, selectedFile, tags } = req.body;
-
 	// if (!mongoose.Types.ObjectId.isValid(id))
 	// 	return res.status(404).send(`No post with id: ${id}`);
-
 	// const updatedPost = {
 	// 	creator,
 	// 	title,
@@ -88,19 +115,14 @@ export const updateProperty = async (req, res) => {
 	// 	selectedFile,
 	// 	_id: id,
 	// };
-
 	// await PostMessage.findByIdAndUpdate(id, updatedPost, { new: true });
-
 	// res.json(updatedPost);
 };
 
 export const deleteProperty = async (req, res) => {
 	// const { id } = req.params;
-
 	// if (!mongoose.Types.ObjectId.isValid(id))
 	// 	return res.status(404).send(`No post with id: ${id}`);
-
 	// await PostMessage.findByIdAndRemove(id);
-
 	// res.json({ message: "Delete succesful " });
 };
