@@ -9,11 +9,9 @@ const CreateProperty = () => {
 	const [propertyImage, setPropertyImage] = useState({ name: "", url: "" });
   const {data:user} = useGetIdentity();
 	const {
-		refineCore: { onFinish, formLoading, queryResult },
+		refineCore: { onFinish, formLoading },
 		register,
-		handleSubmit,
-		resetField,
-		formState: { errors },
+		handleSubmit
 	} = useForm();
 
   const handleImageChange = (file: File) => {
@@ -30,6 +28,7 @@ const CreateProperty = () => {
     if(!propertyImage.name) return alert('Please select an image');
     
     await onFinish({ ...data, photo: propertyImage.url, email: user.email })
+    navigate('/properties');
   };
 
 	return ( 

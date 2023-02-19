@@ -176,14 +176,33 @@ const Form = ({
 							>
 								Property Photo
 							</Typography>
-							<Button>
+							<Button component="label" sx={{ width: 'fit-content', color: '#2ED480', textTransform: 'capitalize', fontSize: 16 }}>
 								Upload
-								<input type="file" hidden accept="image/*"/>
+								<input
+									type="file"
+									hidden
+									accept="image/*"
+									onChange={(e) => {
+										// @ts-ignore
+										handleImageChange(e.target.files[0]);
+									}}
+								/>
 							</Button>
 						</Stack>
-            <Typography fontSize={14} color="" sx={{wordBreak: 'break-all'}}>{propertyImage?.name}</Typography>
+						<Typography
+							fontSize={14}
+							color=""
+							sx={{ wordBreak: "break-all" }}
+						>
+							{propertyImage?.name}
+						</Typography>
 					</Stack>
-          <CustomButton type="submit" title={ formLoading? 'Submitting': 'Submit'} backgroundColor="#475be8" color="#fcfcfc"/>
+					<CustomButton
+						type="submit"
+						title={formLoading ? "Submitting" : "Submit"}
+						backgroundColor="#475be8"
+						color="#fcfcfc"
+					/>
 				</form>
 			</Box>
 		</Box>

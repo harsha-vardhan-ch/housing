@@ -11,6 +11,7 @@ export const createUser = async (req, res) => {
         console.log(userExists);
         if (userExists)
         {
+            console.log("User Exists");
             res.status(200).json(userExists)
         }
         else{
