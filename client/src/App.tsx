@@ -172,7 +172,7 @@ function App() {
 							icon: <ChatBubbleOutline />,
 						},
 						{
-							name: "My Profile",
+							name: "my-profile",
 							list: MyProfile,
 							icon: <AccountCircleOutlined />,
 							options: {

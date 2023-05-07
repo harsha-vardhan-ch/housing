@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import UserModel from "./user.js";
 
 const propertySchema = mongoose.Schema({
     title: { type: 'String', required: true},
@@ -11,6 +10,6 @@ const propertySchema = mongoose.Schema({
     creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 });
 
-const PropertyModel = mongoose.model("property", propertySchema);
+const PropertyModel = mongoose.model("Property", propertySchema);
 
 export default PropertyModel;
