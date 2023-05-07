@@ -63,7 +63,7 @@ function App() {
 			// Save user to MongoDB
 			if (profileObj) {
 				const response = await fetch(
-					"http://localhost:8080/api/v1/users",
+					"https://housease-render.onrender.com/api/v1/users",
 					{
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
@@ -141,7 +141,8 @@ function App() {
 				<Refine
 					dataProvider={dataProvider(
 						// "https://api.fake-rest.refine.dev"
-            "http://localhost:8080/api/v1"
+            // "http://localhost:8080/api/v1"
+			"https://housease-render.onrender.com"
 					)}
 					notificationProvider={notificationProvider}
 					ReadyPage={ReadyPage}
