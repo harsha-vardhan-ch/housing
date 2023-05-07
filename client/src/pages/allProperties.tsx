@@ -84,7 +84,9 @@ const AllProperties = () => {
 							/>
 							<TextField
 								variant="outlined"
-								color="info"
+								// color="info"
+								color="secondary"
+								focused
 								placeholder="Search by title"
 								value={currentFilterValues.title}
 								onChange={(e) => {
@@ -101,7 +103,7 @@ const AllProperties = () => {
 							/>
 							<Select
 								variant="outlined"
-								color="info"
+								color="secondary"
 								displayEmpty
 								required
 								inputProps={{ "aria-label": "Without label" }}
@@ -124,12 +126,10 @@ const AllProperties = () => {
 								{[
 									"Apartment",
 									"Villa",
-									"Farmhouse",
 									"Condos",
 									"Townhouse",
 									"Duplex",
 									"Studio",
-									"Chalet",
 								].map((type) => (
 									<MenuItem
 										key={type}

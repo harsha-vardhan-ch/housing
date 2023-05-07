@@ -51,15 +51,15 @@ export const getAllProperties = async (req, res) => {
 };
 
 export const getProperty = async (req, res) => {
-	try {
-		const { id } = req.params;
-		const propertyExists = await PropertyModel.findOne({ _id: id }).populate('creator');
-	
-		if (propertyExists) res.status(200).json(propertyExists);
-		else res.status(404).json({ message: 'Property does not exist' });
-	  } catch (err) {
-		res.status(500).json({ message: 'Failed to get the property details, please try again later' });
-	  }
+	const { id } = req.params;
+	const propertyExists = await PropertyModel.findOne({ _id: id }).populate(
+		"creator"
+	);
+	if (propertyExists) {
+		res.status(200).json(propertyExists);
+	} else {
+		res.status(404).json({ message: "Property not found" });
+	}
 };
 
 export const createProperty = async (req, res) => {
@@ -104,26 +104,51 @@ export const createProperty = async (req, res) => {
 };
 
 export const updateProperty = async (req, res) => {
-	// const { id } = req.params;
-	// const { title, message, creator, selectedFile, tags } = req.body;
-	// if (!mongoose.Types.ObjectId.isValid(id))
-	// 	return res.status(404).send(`No post with id: ${id}`);
-	// const updatedPost = {
-	// 	creator,
-	// 	title,
-	// 	message,
-	// 	tags,
-	// 	selectedFile,
-	// 	_id: id,
-	// };
-	// await PostMessage.findByIdAndUpdate(id, updatedPost, { new: true });
-	// res.json(updatedPost);
+	try {
+		const { id } = req.params;
+		const { title, description, propertyType, location, price, photo } =
+			req.body;
+		const photoUrl = await cloudinary.uploader.upload(photo);
+
+		const updatedProperty = {
+			title,
+			description,
+			propertyType,
+			location,
+			price,
+			photo: photoUrl.url || photo,
+		};
+		await Property.findByIdAndUpdate({ _id: id }, updatedProperty);
+		res.status(200).json({ message: "Property update Successful" });
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
 };
 
 export const deleteProperty = async (req, res) => {
-	// const { id } = req.params;
-	// if (!mongoose.Types.ObjectId.isValid(id))
-	// 	return res.status(404).send(`No post with id: ${id}`);
-	// await PostMessage.findByIdAndRemove(id);
-	// res.json({ message: "Delete succesful " });
+	try {
+		const { id } = req.params;
+		const propertyToDelete = await PropertyModel.findById({ _id: id }).populate(
+			"creator"
+		);
+		if (!propertyToDelete) {
+			throw new Error("Not Found");
+		}
+
+		const session = await mongoose.startSession();
+		session.startTransaction();
+
+		// deletes the property document from the PropertyModel collection.
+		propertyToDelete.remove({ session });
+
+		// removes the propertyToDelete document from the allProperties array.
+		propertyToDelete.creator.allProperties.pull(propertyToDelete);
+
+		await propertyToDelete.creator.save({ session });
+		await session.commitTransaction();
+
+		res.status(200).json({ message: "Property deleted successfully" });
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
 };

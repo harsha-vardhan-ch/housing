@@ -12,7 +12,7 @@ const router_var = Express.Router();
 
 router_var.get("/", getAllProperties);
 router_var.post("/", createProperty);
-router_var.get("/:id", getProperty);
+router_var.route("/:id").get(getProperty);
 router_var.patch("/:id", updateProperty);
 router_var.delete("/:id", deleteProperty);
 

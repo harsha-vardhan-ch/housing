@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import UserModel from "./user.js";
 
 const propertySchema = mongoose.Schema({
     title: { type: 'String', required: true},
