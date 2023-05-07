@@ -118,7 +118,7 @@ export const updateProperty = async (req, res) => {
 			price,
 			photo: photoUrl.url || photo,
 		};
-		await Property.findByIdAndUpdate({ _id: id }, updatedProperty);
+		await PropertyModel.findByIdAndUpdate({ _id: id }, updatedProperty);
 		res.status(200).json({ message: "Property update Successful" });
 	} catch (error) {
 		res.status(500).json({ message: error.message });
