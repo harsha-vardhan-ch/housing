@@ -142,7 +142,7 @@ function App() {
 					dataProvider={dataProvider(
 						// "https://api.fake-rest.refine.dev"
             // "http://localhost:8080/api/v1"
-			"https://housease-render.onrender.com"
+			"https://housease-render.onrender.com/api/v1"
 					)}
 					notificationProvider={notificationProvider}
 					ReadyPage={ReadyPage}
